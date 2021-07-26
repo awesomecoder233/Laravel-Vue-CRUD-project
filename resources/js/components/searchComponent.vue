@@ -31,3 +31,43 @@
   </div>
 </div>
 </template>
+
+<script>
+
+    import _ from "lodash";
+
+    export default {
+
+    data() {
+        return {
+            units: {},
+            search: '',
+        }
+    },
+    methods: {
+
+        fetchingAllUnit() {
+          axios.get("api/unit").then( data => (this.units = data.data));
+        },
+        getResults(page = 1) {
+              axios.get('api/unit?page=' + page)
+                .then(response => {
+                  this.customers = response.data;
+              });
+        },
+
+        searchUnit:_.debounce(function(){
+          axios.get('/search_unit?q='+this.search)
+                .then((response)=>{
+                this.units.data = response.data.unit
+          })
+        }),
+    },
+    created(){
+
+        this.fetchingAllUnit();
+
+    },
+
+}
+</script>
